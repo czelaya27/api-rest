@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api/messages")
 public class MessageController {
 
-    private List<Message> messages = new ArrayList<>();
+    private final List<Message> messages = new ArrayList<>();
 
     public MessageController() {
         messages.add(new Message(1, "Hola"));

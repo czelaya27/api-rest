@@ -30,4 +30,8 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatusProduct status;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category categoryId;
 }

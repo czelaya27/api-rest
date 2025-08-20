@@ -1,8 +1,11 @@
 package com.example.czelaya.api_rest.controller;
 
+import com.example.czelaya.api_rest.dto.product.CreateProductDto;
+import com.example.czelaya.api_rest.dto.product.UpdateProductDto;
 import com.example.czelaya.api_rest.entity.Product;
 import com.example.czelaya.api_rest.entity.StatusProduct;
 import com.example.czelaya.api_rest.service.IProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        Product newProduct = productService.save(product);
+    public ResponseEntity<Product> addProduct(@RequestBody CreateProductDto createProductDto) {
+        Product newProduct = productService.save(createProductDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
     }
 
@@ -37,16 +40,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid UpdateProductDto dto) {
         try{
-            Product updatedProduct = new Product();
-            updatedProduct.setId(id);
-            updatedProduct.setName(product.getName());
-            updatedProduct.setPrice(product.getPrice());
-            updatedProduct.setAmount(product.getAmount());
-            updatedProduct.setDescription(product.getDescription());
-            updatedProduct.setStatus(product.getStatus());
-            return ResponseEntity.ok(productService.update(id, updatedProduct));
+            return ResponseEntity.ok(productService.update(id, dto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -63,7 +59,7 @@ public class ProductController {
     }
 
     @GetMapping("/search/status/{status}")
-    public ResponseEntity<?> getProductByStatus(@PathVariable StatusProduct status) {
+    public ResponseEntity<List<Product>> getProductByStatus(@PathVariable StatusProduct status) {
         List<Product> products = productService.findAllByStatus(status);
         return ResponseEntity.ok(products);
     }

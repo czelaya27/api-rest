@@ -1,7 +1,11 @@
 package com.example.czelaya.api_rest.service.impl;
 
+import com.example.czelaya.api_rest.dto.product.CreateProductDto;
+import com.example.czelaya.api_rest.dto.product.UpdateProductDto;
+import com.example.czelaya.api_rest.entity.Category;
 import com.example.czelaya.api_rest.entity.Product;
 import com.example.czelaya.api_rest.entity.StatusProduct;
+import com.example.czelaya.api_rest.repository.ICategoryRepository;
 import com.example.czelaya.api_rest.repository.IProductRepository;
 import com.example.czelaya.api_rest.service.IProductService;
 import lombok.SneakyThrows;
@@ -14,14 +18,26 @@ import java.util.Optional;
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
+    private final ICategoryRepository categoryRepository;
 
-    public ProductServiceImpl(IProductRepository productRepository) {
+    public ProductServiceImpl(IProductRepository productRepository, ICategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Product save(Product product) {
-        return productRepository.save(product);
+    @SneakyThrows
+    public Product save(CreateProductDto createProductDto) {
+        Category categoryId = categoryRepository.findById(createProductDto.categoryId())
+                .orElseThrow(() -> new Exception("Category not found"));
+        Product p = new Product();
+        p.setName(createProductDto.name());
+        p.setPrice(createProductDto.price());
+        p.setAmount(createProductDto.amount());
+        p.setDescription(createProductDto.description());
+        p.setStatus(createProductDto.status());
+        p.setCategoryId(categoryId);
+        return productRepository.save(p);
     }
 
     @Override
@@ -41,12 +57,21 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @SneakyThrows
-    public Product update(Long id, Product product) {
+    public Product update(Long id, UpdateProductDto dto) {
         Product p = productRepository.findById(id).orElseThrow(()-> new Exception("Product " + id + " not found"));
-        p.setName(product.getName());
-        p.setPrice(product.getPrice());
-        p.setAmount(product.getAmount());
-        p.setDescription(product.getDescription());
+        p.setName(dto.name());
+        p.setPrice(dto.price());
+        p.setAmount(dto.amount());
+        p.setDescription(dto.description());
+        p.setStatus(dto.status());
+
+        if(dto.categoryId() != null){
+            Long categoryId = dto.categoryId();
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new Exception("Category not found"));
+            p.setCategoryId(category);
+        }
+
         return productRepository.save(p);
     }
 

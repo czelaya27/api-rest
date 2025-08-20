@@ -1,5 +1,7 @@
 package com.example.czelaya.api_rest.service;
 
+import com.example.czelaya.api_rest.dto.product.CreateProductDto;
+import com.example.czelaya.api_rest.dto.product.UpdateProductDto;
 import com.example.czelaya.api_rest.entity.Product;
 import com.example.czelaya.api_rest.entity.StatusProduct;
 
@@ -8,7 +10,7 @@ import java.util.Optional;
 
 public interface IProductService {
 
-    Product save(Product product);
+    Product save(CreateProductDto createProductDto);
 
     List<Product> findAll();
 
@@ -16,7 +18,7 @@ public interface IProductService {
 
     Optional<Product> findByName(String name);
 
-    Product update(Long id, Product product);
+    Product update(Long id, UpdateProductDto dto);
 
     void delete(Long id);
 
