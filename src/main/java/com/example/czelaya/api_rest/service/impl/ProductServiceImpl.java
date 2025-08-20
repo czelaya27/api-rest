@@ -2,8 +2,8 @@ package com.example.czelaya.api_rest.service.impl;
 
 import com.example.czelaya.api_rest.entity.Product;
 import com.example.czelaya.api_rest.entity.StatusProduct;
-import com.example.czelaya.api_rest.repository.ProductRepository;
-import com.example.czelaya.api_rest.service.ProductService;
+import com.example.czelaya.api_rest.repository.IProductRepository;
+import com.example.czelaya.api_rest.service.IProductService;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements IProductService {
 
-    private final ProductRepository productRepository;
+    private final IProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(IProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

@@ -6,7 +6,7 @@ import com.example.czelaya.api_rest.entity.StatusProduct;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductService {
+public interface IProductService {
 
     Product save(Product product);
 
