@@ -1,14 +1,14 @@
 package com.example.czelaya.api_rest.service;
 
-import com.example.czelaya.api_rest.entity.Category;
+import com.example.czelaya.api_rest.dto.category.CategoryDTO;
 
 import java.util.List;
 
 public interface ICategoryService {
-    Category createCategory(Category category);
-    List<Category> findAll();
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    List<CategoryDTO> findAll();
     boolean findByName(String nameCategory);
-    Category findById(Long idCategory);
-    Category updateCategory(Long idCategory, Category category);
+    CategoryDTO findById(Long idCategory);
+    CategoryDTO updateCategory(Long idCategory, CategoryDTO categoryDTO);
     void deleteCategoryById(Long idCategory);
 }

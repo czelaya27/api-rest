@@ -1,30 +1,28 @@
 package com.example.czelaya.api_rest.service;
 
-import com.example.czelaya.api_rest.dto.product.CreateProductDto;
-import com.example.czelaya.api_rest.dto.product.UpdateProductDto;
-import com.example.czelaya.api_rest.entity.Product;
+import com.example.czelaya.api_rest.dto.product.ProductDTO;
 import com.example.czelaya.api_rest.entity.StatusProduct;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IProductService {
 
-    Product save(CreateProductDto createProductDto);
+    ProductDTO save(ProductDTO productDTO);
 
-    List<Product> findAll();
+    List<ProductDTO> findAll();
 
-    Optional<Product> findById(Long id);
+    ProductDTO findById(Long id);
 
-    Optional<Product> findByName(String name);
+    ProductDTO findByName(String name);
 
-    Product update(Long id, UpdateProductDto dto);
+    ProductDTO update(Long id, ProductDTO productDTO);
 
-    void delete(Long id);
+    ResponseEntity<ProductDTO> delete(Long id);
 
-    Product updateStatus(Long id, StatusProduct status);
+    ProductDTO updateStatus(Long id, StatusProduct status);
 
-    List<Product> findAllByStatus(StatusProduct status);
+    List<ProductDTO> findAllByStatus(StatusProduct status);
 
-    List<Product> findByCategory(Long categoryId);
+    List<ProductDTO> findByCategory(Long categoryId);
 }

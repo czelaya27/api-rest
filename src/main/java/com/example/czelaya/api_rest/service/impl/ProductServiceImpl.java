@@ -1,101 +1,110 @@
 package com.example.czelaya.api_rest.service.impl;
 
-import com.example.czelaya.api_rest.dto.product.CreateProductDto;
-import com.example.czelaya.api_rest.dto.product.UpdateProductDto;
+import com.example.czelaya.api_rest.dto.product.ProductDTO;
 import com.example.czelaya.api_rest.entity.Category;
 import com.example.czelaya.api_rest.entity.Product;
 import com.example.czelaya.api_rest.entity.StatusProduct;
 import com.example.czelaya.api_rest.exceptions.ResourceNotFoundException;
+import com.example.czelaya.api_rest.mapper.ProductMapper;
 import com.example.czelaya.api_rest.repository.ICategoryRepository;
 import com.example.czelaya.api_rest.repository.IProductRepository;
 import com.example.czelaya.api_rest.service.IProductService;
 import lombok.SneakyThrows;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
     private final ICategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(IProductRepository productRepository, ICategoryRepository categoryRepository) {
+    public ProductServiceImpl(IProductRepository productRepository, ICategoryRepository categoryRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
-    public Product save(CreateProductDto createProductDto) {
-        Category categoryId = categoryRepository.findById(createProductDto.categoryId())
+    public ProductDTO save(ProductDTO productDTO) {
+        Category categoryId = categoryRepository.findById(productDTO.getIdCategory())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        Product p = new Product();
-        p.setName(createProductDto.name());
-        p.setPrice(createProductDto.price());
-        p.setAmount(createProductDto.amount());
-        p.setDescription(createProductDto.description());
-        p.setStatus(createProductDto.status());
-        p.setCategory(categoryId);
-        return productRepository.save(p);
+
+        Product product = productMapper.toEntity(productDTO);
+        product.setCategory(categoryId);
+        Product productSave = productRepository.save(product);
+        return productMapper.toDto(productSave);
     }
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDTO> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(productMapper::toDto).toList();
     }
 
     @Override
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    public ProductDTO findById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found " + id));
+        return productMapper.toDto(product);
     }
 
     @Override
-    public Optional<Product> findByName(String name) {
-        return productRepository.findByName(name);
+    public ProductDTO findByName(String name) {
+        Product product = productRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Product not found " + name));
+        return productMapper.toDto(product);
     }
 
     @Override
-    public Product update(Long id, UpdateProductDto dto) {
-        Product p = productRepository.findById(id)
+    public ProductDTO update(Long id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product " + id + " not found"));
-        p.setName(dto.name());
-        p.setPrice(dto.price());
-        p.setAmount(dto.amount());
-        p.setDescription(dto.description());
-        p.setStatus(dto.status());
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setAmount(productDTO.getAmount());
+        product.setDescription(productDTO.getDescription());
+        product.setStatus(productDTO.getStatus());
 
-        if (dto.categoryId() != null) {
-            Long categoryId = dto.categoryId();
+        if (productDTO.getIdCategory() != null) {
+            Long categoryId = productDTO.getIdCategory();
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-            p.setCategory(category);
+            product.setCategory(category);
         }
 
-        return productRepository.save(p);
+        Product updatedProduct = productRepository.save(product);
+
+        return productMapper.toDto(updatedProduct);
     }
 
     @Override
     @SneakyThrows
-    public void delete(Long id) {
+    public ResponseEntity<ProductDTO> delete(Long id) {
         productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found" + " " + id));
         productRepository.deleteById(id);
+        return null;
     }
 
     @Override
-    public Product updateStatus(Long id, StatusProduct status) {
-        var p = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found" + id));
-        p.setStatus(status);
-        return productRepository.save(p);
+    public ProductDTO updateStatus(Long id, StatusProduct status) {
+        var product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found" + id));
+        product.setStatus(status);
+
+        Product updatedProduct = productRepository.save(product);
+        return productMapper.toDto(updatedProduct);
     }
 
     @Override
-    public List<Product> findAllByStatus(StatusProduct status) {
-        return productRepository.findAllByStatus(status);
+    public List<ProductDTO> findAllByStatus(StatusProduct status) {
+        List<Product> products = productRepository.findAllByStatus(status);
+        return products.stream().map(productMapper::toDto).toList();
     }
 
     @Override
-    public List<Product> findByCategory(Long categoryId) {
-        return productRepository.findByCategory_Id(categoryId);
+    public List<ProductDTO> findByCategory(Long categoryId) {
+        List<Product> products = productRepository.findByCategory_Id(categoryId);
+        return products.stream().map(productMapper::toDto).toList();
     }
 }
