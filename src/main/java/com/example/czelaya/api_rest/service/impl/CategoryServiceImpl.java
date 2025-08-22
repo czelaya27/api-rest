@@ -1,10 +1,11 @@
 package com.example.czelaya.api_rest.service.impl;
 
 import com.example.czelaya.api_rest.entity.Category;
+import com.example.czelaya.api_rest.exceptions.ResourceNotFoundException;
+import com.example.czelaya.api_rest.exceptions.BadRequestException;
 import com.example.czelaya.api_rest.repository.ICategoryRepository;
 import com.example.czelaya.api_rest.service.ICategoryService;
-import lombok.SneakyThrows;
-import org.apache.coyote.BadRequestException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,6 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @SneakyThrows
     public Category createCategory(Category category) {
         if(categoryRepository.existsByName(category.getName())){
             throw new BadRequestException("Category already exists");
@@ -39,17 +39,15 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @SneakyThrows
     public Category findById(Long idCategory) {
         return categoryRepository.findById(idCategory)
-                .orElseThrow(() -> new BadRequestException("Category not found " + idCategory));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + idCategory));
     }
 
     @Override
-    @SneakyThrows
     public Category updateCategory(Long idCategory, Category category) {
         Category c = categoryRepository.findById(idCategory)
-                .orElseThrow(() -> new BadRequestException("Category not found " + idCategory));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + idCategory));
         if(categoryRepository.existsByName(category.getName()) && !category.getName().equals(c.getName())){
             throw new BadRequestException("Category already exists");
         }
@@ -58,11 +56,10 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    @SneakyThrows
     public void deleteCategoryById(Long idCategory) {
         Optional<Category> category = categoryRepository.findById(idCategory);
         if(category.isEmpty()){
-            throw new BadRequestException("Category not found " + idCategory);
+            throw new ResourceNotFoundException("Category not found " + idCategory);
         }
         categoryRepository.deleteById(idCategory);
     }

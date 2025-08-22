@@ -79,4 +79,10 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @GetMapping("/search/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productService.findByCategory(categoryId);
+        return ResponseEntity.ok(products);
+    }
 }

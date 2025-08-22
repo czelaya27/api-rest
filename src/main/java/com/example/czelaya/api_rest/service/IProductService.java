@@ -25,4 +25,6 @@ public interface IProductService {
     Product updateStatus(Long id, StatusProduct status);
 
     List<Product> findAllByStatus(StatusProduct status);
+
+    List<Product> findByCategory(Long categoryId);
 }

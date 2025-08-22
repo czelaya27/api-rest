@@ -2,6 +2,7 @@ package com.example.czelaya.api_rest.controller;
 
 import com.example.czelaya.api_rest.entity.Category;
 import com.example.czelaya.api_rest.service.ICategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category){
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category){
         Category newCategory = categoryService.createCategory(category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
