@@ -1,14 +1,17 @@
 package com.example.czelaya.api_rest.controller;
 
 
+import com.example.czelaya.api_rest.components.utils.constants.APIField;
 import com.example.czelaya.api_rest.entity.Message;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/messages")
+@RequestMapping(APIField.MESSAGE_API)
+@Tag(name = "Message")
 public class MessageController {
 
     private final List<Message> messages = new ArrayList<>();

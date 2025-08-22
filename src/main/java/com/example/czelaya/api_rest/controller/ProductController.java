@@ -1,8 +1,10 @@
 package com.example.czelaya.api_rest.controller;
 
+import com.example.czelaya.api_rest.components.utils.constants.APIField;
 import com.example.czelaya.api_rest.dto.product.ProductDTO;
 import com.example.czelaya.api_rest.entity.StatusProduct;
 import com.example.czelaya.api_rest.service.IProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping(APIField.PRODUCT_API)
+@Tag(name = "Product")
 public class ProductController {
 
     private final IProductService productService;
@@ -22,7 +25,7 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/add")

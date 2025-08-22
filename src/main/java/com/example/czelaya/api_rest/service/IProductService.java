@@ -2,7 +2,6 @@ package com.example.czelaya.api_rest.service;
 
 import com.example.czelaya.api_rest.dto.product.ProductDTO;
 import com.example.czelaya.api_rest.entity.StatusProduct;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface IProductService {
 
     ProductDTO update(Long id, ProductDTO productDTO);
 
-    ResponseEntity<ProductDTO> delete(Long id);
+    void delete(Long id);
 
     ProductDTO updateStatus(Long id, StatusProduct status);
 

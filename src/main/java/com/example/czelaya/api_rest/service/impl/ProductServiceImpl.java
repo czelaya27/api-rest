@@ -9,8 +9,6 @@ import com.example.czelaya.api_rest.mapper.ProductMapper;
 import com.example.czelaya.api_rest.repository.ICategoryRepository;
 import com.example.czelaya.api_rest.repository.IProductRepository;
 import com.example.czelaya.api_rest.service.IProductService;
-import lombok.SneakyThrows;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,11 +78,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    @SneakyThrows
-    public ResponseEntity<ProductDTO> delete(Long id) {
+    public void delete(Long id) {
         productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found" + " " + id));
         productRepository.deleteById(id);
-        return null;
     }
 
     @Override

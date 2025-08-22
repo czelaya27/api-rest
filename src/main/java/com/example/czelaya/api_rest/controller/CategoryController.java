@@ -1,7 +1,9 @@
 package com.example.czelaya.api_rest.controller;
 
+import com.example.czelaya.api_rest.components.utils.constants.APIField;
 import com.example.czelaya.api_rest.dto.category.CategoryDTO;
 import com.example.czelaya.api_rest.service.ICategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping(APIField.CATEGORY_API)
+@Tag(name = "Category")
 public class CategoryController {
 
     private final ICategoryService categoryService;
